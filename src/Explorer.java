@@ -39,9 +39,13 @@ public class Explorer extends Player {
                 ? " with " + getHealth() + " health" : "(fainted)");
     }
 
+    /**
+     * @return 1
+     * @inheritDoc
+     */
     @Override
     public int getDamage() {
-        return 0;
+        return 1;
     }
 
     public String repr() {
