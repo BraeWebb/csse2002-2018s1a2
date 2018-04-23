@@ -22,7 +22,6 @@ public class BoundsMapper extends MapWalker {
         super.reset();
 
         coords = new HashMap<>();
-        coords.put(this.root, new Pair(0, 0));
 
         xMin = 0;
         xMax = 0;
@@ -33,11 +32,13 @@ public class BoundsMapper extends MapWalker {
     @Override
     protected void visit(Room room) {
         Pair pair = coords.get(room);
+        int x = 0;
+        int y = 0;
 
         for (Entry<String, Room> entry : room.getExits().entrySet()) {
 
-            int x = pair.x;
-            int y = pair.y;
+            x = pair.x;
+            y = pair.y;
 
             switch (entry.getKey()) {
                 case "North":
@@ -59,7 +60,9 @@ public class BoundsMapper extends MapWalker {
                 xMin = x;
             } else if (x > xMax) {
                 xMax = x;
-            } else if (y < yMin) {
+            }
+
+            if (y < yMin) {
                 yMin = y;
             } else if (y > yMax) {
                 yMax = y;
@@ -70,6 +73,7 @@ public class BoundsMapper extends MapWalker {
     }
 
     public static void main(String[] args) throws ExitExistsException, NullRoomException{
+
         Room room = new Room("Root Room");
 
         Room north = new Room("North Room");

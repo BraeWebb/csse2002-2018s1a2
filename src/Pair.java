@@ -22,7 +22,7 @@ public class Pair {
     public int hashCode() {
         int result = 17;
         result = 31 * result + x;
-        result = 38 * result + y;
+        result = 19 * result + y;
         return result;
     }
 

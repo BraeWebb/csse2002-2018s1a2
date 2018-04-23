@@ -51,11 +51,7 @@ public class Builder extends Player {
 
         String[] parts = encoded.split(";");
 
-        if (parts.length != 3) {
-            return null;
-        }
-
-        if (!parts[0].equals("B")) {
+        if (parts.length != 3 || !parts[0].equals("B")) {
             return null;
         }
 
