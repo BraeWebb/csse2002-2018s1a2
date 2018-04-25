@@ -134,6 +134,7 @@ public class Critter extends Thing implements Lootable, Mob {
 
         double value;
         int health;
+
         try {
             value = Double.parseDouble(parts[1]);
             health = Integer.decode(parts[2]);

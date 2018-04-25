@@ -4,8 +4,6 @@ import java.util.Map.Entry;
 
 public class BoundsMapper extends MapWalker {
 
-    private Room root;
-
     public Map<Room, Pair> coords;
     public int xMin;
     public int xMax;
@@ -14,8 +12,6 @@ public class BoundsMapper extends MapWalker {
 
     public BoundsMapper(Room room) {
         super(room);
-        root = room;
-        reset();
     }
 
     public void reset() {
@@ -29,16 +25,36 @@ public class BoundsMapper extends MapWalker {
         yMax = 0;
     }
 
+    /**
+     * Assign room coordinates relative to a neighbour.
+     * If room has no known neighbours, give it coordinate (0,0).
+     * If your "North" neighbour has coordinates (x,y), then your coodinates should be (x, y-1).
+     * If your "East" neighbour has coordinates (x,y), then
+     * your coordinates should be (x+1, y).
+     * (Similar for South and West).
+     * Check for known coordinates in order: North, South, East, West.
+     *
+     * @require All exits are labelled one of {"North", "South", "East", "West"}
+     * @param room Room to assign coordinates to
+     */
     @Override
     protected void visit(Room room) {
-        Pair pair = coords.get(room);
+        super.visit(room);
+
+        Pair location;
+
         int x = 0;
         int y = 0;
 
         for (Entry<String, Room> entry : room.getExits().entrySet()) {
 
-            x = pair.x;
-            y = pair.y;
+            if (!coords.containsKey(entry.getValue())) {
+                continue;
+            }
+
+            location = coords.get(entry.getValue());
+            x = location.x;
+            y = location.y;
 
             switch (entry.getKey()) {
                 case "North":
@@ -54,22 +70,14 @@ public class BoundsMapper extends MapWalker {
                     x += 1;
                     break;
             }
-            coords.put(entry.getValue(), new Pair(x, y));
-
-            if (x < xMin) {
-                xMin = x;
-            } else if (x > xMax) {
-                xMax = x;
-            }
-
-            if (y < yMin) {
-                yMin = y;
-            } else if (y > yMax) {
-                yMax = y;
-            }
         }
 
-        super.visit(room);
+        xMax = Math.max(xMax, x);
+        yMax = Math.max(yMax, y);
+        xMin = Math.min(xMin, x);
+        yMin = Math.min(yMin, y);
+
+        coords.put(room, new Pair(x, y));
     }
 
     public static void main(String[] args) throws ExitExistsException, NullRoomException{

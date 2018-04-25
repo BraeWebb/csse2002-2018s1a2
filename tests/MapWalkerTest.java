@@ -43,7 +43,24 @@ public class MapWalkerTest {
             direction = directions[i];
             next = new Room(String.valueOf(i + start));
             rooms.add(next);
-            current.addExit(direction, next);
+            // TODO: fix when sleep has been had
+            String opposite = "";
+            switch(direction) {
+                case "North":
+                    opposite = "South";
+                    break;
+                case "South":
+                    opposite = "North";
+                    break;
+                case "East":
+                    opposite = "West";
+                    break;
+                case "West":
+                    opposite = "East";
+                    break;
+            }
+            Room.makeExitPair(next, current, direction, opposite);
+//            current.addExit(direction, next);
             current = next;
         }
 
@@ -54,21 +71,6 @@ public class MapWalkerTest {
     public void testWalk() {
         MapWalker mapper = new MapWalker(root);
         mapper.walk();
-        for (Room room : rooms) {
-            assertTrue(mapper.hasVisited(room));
-        }
-
-        assertFalse(mapper.hasVisited(new Room("")));
-        assertFalse(mapper.hasVisited(new Room("Root Room 1")));
-        assertFalse(mapper.hasVisited(new Room("4")));
-    }
-
-    @Test
-    public void testCyclic() throws ExitExistsException, NullRoomException {
-        MapWalker mapper = new MapWalker(root);
-        rooms.get(3).addExit("South", rooms.get(2));
-        mapper.walk();
-
         for (Room room : rooms) {
             assertTrue(mapper.hasVisited(room));
         }

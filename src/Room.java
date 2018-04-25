@@ -161,10 +161,23 @@ public class Room implements Serializable {
      */
     public static void makeExitPair(Room room1, Room room2, String label1,
             String label2) throws ExitExistsException, NullRoomException {
+
+        // if either room is null throw NullRoomException
+        if (room1 == null || room2 == null) {
+            throw new NullRoomException();
+        }
+        // if either label is null throw NullPointerException
+        if (label1 == null || label2 == null) {
+            throw new NullPointerException();
+        }
+
+        // attempt to create an exit from room1 to room2
         room1.addExit(label1, room2);
+
         try {
             room2.addExit(label2, room1);
         } catch (ExitExistsException | NullRoomException e) {
+            // if making the second exit fails, undo the first
             room1.removeExit(label1);
             throw e;
         }
